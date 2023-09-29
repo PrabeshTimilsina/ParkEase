@@ -26,7 +26,7 @@ class MyTextField extends StatelessWidget {
               borderSide: BorderSide(color: Colors.grey),
             ),
             hintText: hintText,
-            contentPadding: EdgeInsets.all(10)),
+            contentPadding: const EdgeInsets.all(10)),
       ),
     );
   }
