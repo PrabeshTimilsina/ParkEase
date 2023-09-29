@@ -3,6 +3,7 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 import 'package:park_ease/data/providers/current_location_model.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer' as developer;
 
 // WEST SOUTH EAST NORTH
 const boundingBoxForNepal =
@@ -49,14 +50,33 @@ class _MapsState extends State<Maps> {
               west: boundingBoxForNepal.$1,
             ));
 
-            _initialLocation = (widget.initialLocation == null)
-                ? await mapController.myLocation()
-                : widget.initialLocation;
+            if (currentLocation.currentLocation != null) {
+              _initialLocation = currentLocation.currentLocation;
+            } else {
+              _initialLocation = (widget.initialLocation == null)
+                  ? await mapController.myLocation()
+                  : widget.initialLocation;
+            }
 
-            mapController.goToLocation(_initialLocation!);
-            context
-                .read<CurrentLocationModel>()
-                .setCurrentLocation(_initialLocation);
+            if (currentLocation.currentLocation != null) {
+              developer.log("Current Location: $_initialLocation");
+              developer.log("Current map controller: $mapController");
+              if (_initialLocation != null) {
+                await mapController.addMarker(_initialLocation!,
+                    markerIcon:
+                        const MarkerIcon(icon: Icon(Icons.location_pin)),
+                    iconAnchor: IconAnchor(
+                      anchor: Anchor.top,
+                    ));
+              }
+            }
+
+            if (_initialLocation != null) {
+              mapController.goToLocation(_initialLocation!);
+              context
+                  .read<CurrentLocationModel>()
+                  .setCurrentLocation(_initialLocation);
+            }
 
             mapController.setZoom(zoomLevel: 15);
           },
