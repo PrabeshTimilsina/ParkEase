@@ -20,9 +20,10 @@ class Register extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: mediaquery.height * 0.05),
-                Icon(
-                  Icons.lock,
-                  size: mediaquery.height * 0.17,
+                Image.asset(
+                  'assets/images/Logo.png',
+                  width: mediaquery.height * 0.18,
+                  height: mediaquery.height * 0.18,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 MyTextField(
@@ -55,13 +56,10 @@ class Register extends StatelessWidget {
                   obscureText: true,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
-                SizedBox(
-                  height: mediaquery.height * 0.025,
-                ),
                 const MyButton(
                   buttonName: 'Sign up',
                 ),
-                SizedBox(height: mediaquery.height * 0.05),
+                SizedBox(height: mediaquery.height * 0.025),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
