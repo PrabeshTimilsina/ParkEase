@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'dart:developer' as developer;
+
+import 'package:park_ease/data/providers/current_location_model.dart';
+import 'package:provider/provider.dart';
 
 // WEST SOUTH EAST NORTH
 const boundingBoxForNepal =
@@ -33,74 +35,82 @@ class _MapsState extends State<Maps> {
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.topRight, children: [
       // the map layer
-      OSMFlutter(
-        onMapIsReady: (p0) async {
-          // placing these inside of onInit caused runtime error
+      Consumer<CurrentLocationModel>(
+          builder: (context, currentLocation, child) {
+        return OSMFlutter(
+          onMapIsReady: (p0) async {
+            // placing these inside of onInit caused runtime error
 
-          // limiting map area (Doesn't work).
-          mapController.limitAreaMap(BoundingBox(
-            east: boundingBoxForNepal.$3,
-            north: boundingBoxForNepal.$4,
-            south: boundingBoxForNepal.$2,
-            west: boundingBoxForNepal.$1,
-          ));
+            // limiting map area (Doesn't work).
+            mapController.limitAreaMap(BoundingBox(
+              east: boundingBoxForNepal.$3,
+              north: boundingBoxForNepal.$4,
+              south: boundingBoxForNepal.$2,
+              west: boundingBoxForNepal.$1,
+            ));
 
-          _initialLocation = (widget.initialLocation == null)
-              ? await mapController.myLocation()
-              : widget.initialLocation;
+            _initialLocation = (widget.initialLocation == null)
+                ? await mapController.myLocation()
+                : widget.initialLocation;
 
-          mapController.goToLocation(_initialLocation!);
-          mapController.setZoom(zoomLevel: 15);
-        },
-        controller: mapController,
-        osmOption: OSMOption(
-          showDefaultInfoWindow: false,
-          showZoomController: true,
-          enableRotationByGesture: true,
-          userTrackingOption: const UserTrackingOption(
-            enableTracking: true,
-            unFollowUser: true,
-          ),
-          zoomOption: const ZoomOption(
-            initZoom: 8,
-            minZoomLevel: 3,
-            maxZoomLevel: 18,
-            stepZoom: 1.0,
-          ),
-          userLocationMarker: UserLocationMaker(
-            personMarker: const MarkerIcon(
-              icon: Icon(
-                Icons.location_history_rounded,
-                color: Colors.red,
-                size: 48,
+            mapController.goToLocation(_initialLocation!);
+            context
+                .read<CurrentLocationModel>()
+                .setCurrentLocation(_initialLocation);
+
+            mapController.setZoom(zoomLevel: 15);
+          },
+          controller: mapController,
+          osmOption: OSMOption(
+            showDefaultInfoWindow: false,
+            showZoomController: true,
+            enableRotationByGesture: true,
+            userTrackingOption: const UserTrackingOption(
+              enableTracking: true,
+              unFollowUser: true,
+            ),
+            zoomOption: const ZoomOption(
+              initZoom: 8,
+              minZoomLevel: 3,
+              maxZoomLevel: 18,
+              stepZoom: 1.0,
+            ),
+            userLocationMarker: UserLocationMaker(
+              personMarker: const MarkerIcon(
+                icon: Icon(
+                  Icons.location_history_rounded,
+                  color: Colors.red,
+                  size: 48,
+                ),
+              ),
+              directionArrowMarker: const MarkerIcon(
+                icon: Icon(
+                  Icons.double_arrow,
+                  size: 48,
+                ),
               ),
             ),
-            directionArrowMarker: const MarkerIcon(
+            roadConfiguration: const RoadOption(
+              roadColor: Colors.yellowAccent,
+            ),
+            markerOption: MarkerOption(
+                defaultMarker: const MarkerIcon(
               icon: Icon(
-                Icons.double_arrow,
-                size: 48,
+                Icons.person_pin_circle,
+                color: Colors.blue,
+                size: 56,
               ),
-            ),
+            )),
           ),
-          roadConfiguration: const RoadOption(
-            roadColor: Colors.yellowAccent,
-          ),
-          markerOption: MarkerOption(
-              defaultMarker: const MarkerIcon(
-            icon: Icon(
-              Icons.person_pin_circle,
-              color: Colors.blue,
-              size: 56,
-            ),
-          )),
-        ),
-        onGeoPointClicked: (point) async {
-          await mapController.goToLocation(point);
+          onGeoPointClicked: (point) async {
+            await mapController.goToLocation(point);
 
-          await mapController.setZoom(
-              zoomLevel: 18); // zooming to max zoom level
-        },
-      ),
+            await mapController.setZoom(
+                zoomLevel: 18); // zooming to max zoom level
+          },
+        );
+      }),
+
       // The layer above the map
       Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         // placing search box and suggestions together

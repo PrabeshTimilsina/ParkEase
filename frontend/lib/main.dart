@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:park_ease/data/providers/current_address_model.dart';
+import 'package:park_ease/data/providers/current_location_model.dart';
 import 'package:park_ease/presentation/pages/home.dart';
 import 'package:park_ease/presentation/pages/login.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (context) => CurrentLocationModel(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => CurrentAddressModel(),
+    ),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

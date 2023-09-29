@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:park_ease/data/providers/current_location_model.dart';
 import 'package:park_ease/presentation/pages/home.dart';
+import 'package:provider/provider.dart';
 
 class LocationPicker extends StatefulWidget {
   const LocationPicker({super.key, this.initialLocation, this.initialAddress});
@@ -14,7 +15,6 @@ class LocationPicker extends StatefulWidget {
 }
 
 class _LocationPickerState extends State<LocationPicker> {
- 
   late PickerMapController pickerController = PickerMapController(
       initMapWithUserPosition:
           const UserTrackingOption(enableTracking: true, unFollowUser: true));
@@ -46,14 +46,23 @@ class _LocationPickerState extends State<LocationPicker> {
                       pickerController.osmBaseController.currentLocation();
                     },
                   ),
-                  IconButton(
-                    iconSize: 30,
-                    icon: const Icon(Icons.arrow_circle_right_outlined),
-                    onPressed: () async {
-                      GeoPoint p =
-                          await pickerController.selectAdvancedPositionPicker();
-                      Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MyHomePage(title: "Home",)));
+                  Consumer<CurrentLocationModel>(
+                    builder: (context, currentLocation, child) {
+                      return IconButton(
+                        iconSize: 30,
+                        icon: const Icon(Icons.arrow_circle_right_outlined),
+                        onPressed: () async {
+                          GeoPoint p = await pickerController
+                              .selectAdvancedPositionPicker();
+                          context
+                              .read<CurrentLocationModel>()
+                              .setCurrentLocation(p);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const MyHomePage(
+                                    title: "Home",
+                                  )));
+                        },
+                      );
                     },
                   )
                 ])));
