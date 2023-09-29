@@ -42,28 +42,28 @@ class _NavDrawerState extends State<NavDrawer> {
                     leading: const Icon(Icons.home),
                     title: const Text('Home'),
                     onTap: () {
-                      Navigator.pushNamed(context, '/');
+                      Navigator.pushNamed(context, '/home');
                     },
                   ),
                   ListTile(
                     leading: const Icon(Icons.label_important),
                     title: const Text('Core Functionality'),
                     onTap: () {
-                      Navigator.pushNamed(context,'/core_functionality');
+                      Navigator.pushNamed(context, '/core_functionality');
                     },
                   ),
                   ListTile(
                     leading: const Icon(Icons.logout),
                     title: const Text('Logout'),
                     onTap: () {
-                      Navigator.pushNamed(context,'/logout');
+                      Navigator.pushNamed(context, '/logout');
                     },
                   ),
                   ListTile(
                     leading: const Icon(Icons.exit_to_app),
                     title: const Text('Quit'),
                     onTap: () {
-                      Navigator.pushNamed(context,'/quit');
+                      Navigator.pushNamed(context, '/quit');
                     },
                   )
                 ],
