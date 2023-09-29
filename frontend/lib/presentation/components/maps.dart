@@ -27,7 +27,6 @@ class Maps extends StatefulWidget {
 }
 
 class _MapsState extends State<Maps> {
-
   GeoPoint? _initialLocation;
 
   @override
@@ -46,10 +45,12 @@ class _MapsState extends State<Maps> {
             west: boundingBoxForNepal.$1,
           ));
 
-          _initialLocation = (widget.initialLocation == null) ? await mapController.myLocation() : widget.initialLocation;
+          _initialLocation = (widget.initialLocation == null)
+              ? await mapController.myLocation()
+              : widget.initialLocation;
 
           mapController.goToLocation(_initialLocation!);
-         
+          mapController.setZoom(zoomLevel: 15);
         },
         controller: mapController,
         osmOption: OSMOption(
@@ -95,7 +96,7 @@ class _MapsState extends State<Maps> {
         ),
         onGeoPointClicked: (point) async {
           await mapController.goToLocation(point);
-          
+
           await mapController.setZoom(
               zoomLevel: 18); // zooming to max zoom level
         },
@@ -103,15 +104,12 @@ class _MapsState extends State<Maps> {
       // The layer above the map
       Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         // placing search box and suggestions together
-        Column(children: [
-          Container()
-        ]),
+        Column(children: [Container()]),
         Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           IconButton(
             iconSize: 30,
             icon: const Icon(Icons.local_parking),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: const Icon(Icons.location_searching_sharp),
