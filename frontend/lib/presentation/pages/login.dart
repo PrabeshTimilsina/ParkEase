@@ -21,9 +21,8 @@ class Home extends StatelessWidget {
                 SizedBox(height: mediaquery.height * 0.05),
                 Image.asset(
                   'assets/images/Logo.png',
-                  fit: BoxFit.cover,
-                  width: 100,
-                  height: 100,
+                  width: 150,
+                  height: 150,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 const Text(
