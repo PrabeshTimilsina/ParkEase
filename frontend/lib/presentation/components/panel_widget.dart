@@ -40,10 +40,7 @@ class PanelWidget extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: MyTextField(
-                  hintText: 'Current Location', obscureText: false)),
+          const MyTextField(hintText: 'Current Location', obscureText: false),
           const SizedBox(
             height: 15,
           ),
