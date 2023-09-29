@@ -6,6 +6,8 @@ import 'package:park_ease/presentation/pages/login.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => CurrentLocationModel(),
