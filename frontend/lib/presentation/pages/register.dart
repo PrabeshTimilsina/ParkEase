@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
+import 'package:park_ease/presentation/pages/home.dart';
 
 import '../components/my_textfield.dart';
 
@@ -63,7 +64,7 @@ class Register extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Placeholder()));
+                        MaterialPageRoute(builder: (context) => const MyHomePage(title: "Home")));
                   },
                   child: const Text(
                     'Continue as Guest',
