@@ -4,8 +4,8 @@ import 'package:park_ease/presentation/components/my_textfield.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
 import 'package:park_ease/presentation/pages/register.dart';
 
-class Home extends StatelessWidget {
-  Home({super.key});
+class Login extends StatelessWidget {
+  Login({super.key});
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();

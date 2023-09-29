@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title:"ParkEase",
       theme: ThemeData.dark(),
-      home: Home(),
+      home: Login(),
     );
   }
 }
