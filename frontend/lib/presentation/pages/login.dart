@@ -21,8 +21,8 @@ class Login extends StatelessWidget {
                 SizedBox(height: mediaquery.height * 0.05),
                 Image.asset(
                   'assets/images/Logo.png',
-                  width: 150,
-                  height: 150,
+                  width: 130,
+                  height: 130,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 const Text(
