@@ -35,6 +35,10 @@ const parkingLocationSchema = new mongoose.Schema({
       required: true,
     },
   },
+  parkingType:{
+    type: String,
+    required: true,
+  },
   // Embed the parking spaces within the location
   // parkingSpaces: [parkingSpaceSchema],
   rating: {

@@ -44,6 +44,9 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
+import sys 
+print(sys.executable)
+
 from yolov5.models.common import DetectMultiBackend
 from yolov5.utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
 from yolov5.utils.general import (LOGGER, Profile, check_file, check_img_size, check_imshow, check_requirements, colorstr, cv2,
@@ -61,7 +64,7 @@ app=Flask(__name__)
 @app.route("/run",methods=['GET'])
 def run(
         weights='./models/yolov5x.pt',  # model path or triton URL
-        source='./img/carup.jpg',  # file/dir/URL/glob/screen/0(webcam)
+        source='./img/park.jpg',  # file/dir/URL/glob/screen/0(webcam)
         data=ROOT / 'data/coco128.yaml',  # dataset.yaml path
         imgsz=None,  # inference size (height, width)
         img=None,  # inference size (pixels)
