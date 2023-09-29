@@ -44,9 +44,15 @@ class MySearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     developer.log("Received point: $query");
-    final GeoPoint point = GeoPoint(
-        latitude: double.parse(query.split(",").first),
-        longitude: double.parse(query.split(",").last));
+    GeoPoint? point;
+    try {
+      point = GeoPoint(
+          latitude: double.parse(query.split(",").first),
+          longitude: double.parse(query.split(",").last));
+    } catch (e) {
+      developer.log("Invalid point to parse.");
+      point = null;
+    }
 
     return Center(child: LocationPicker(initialLocation: point));
   }
