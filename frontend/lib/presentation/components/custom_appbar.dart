@@ -118,7 +118,7 @@ class MySearchDelegate extends SearchDelegate {
                   },
                 );
               },
-              itemCount: snapshot.data!.length,
+              itemCount: (snapshot.data == null) ? 0 : snapshot.data!.length,
             );
           } else {
             return ListView();
