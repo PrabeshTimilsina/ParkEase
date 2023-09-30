@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:park_ease/classes/nearby_parkings.dart';
+import 'package:park_ease/presentation/components/nav_drawer.dart';
 import 'package:park_ease/presentation/pages/booking.dart';
 
 class parkingList extends StatelessWidget {
@@ -10,7 +11,15 @@ class parkingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: (nearbyParkings == null || nearbyParkings!.nearbyParkingAreas == null)
+        appBar: AppBar(
+            leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            NavDrawer();
+          },
+        )),
+        body: (nearbyParkings == null ||
+                nearbyParkings!.nearbyParkingAreas == null)
             ? const Center(child: Text("Didn't find any parking areas."))
             : ListView.builder(
                 itemCount: (nearbyParkings != null)
@@ -31,7 +40,6 @@ class parkingList extends StatelessWidget {
                         horizontal: 15.0, vertical: 8),
                     margin: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                     
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(15.0),
                     ),

@@ -1,14 +1,44 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/my_textfield.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
+import 'package:park_ease/presentation/pages/home.dart';
 import 'package:park_ease/presentation/pages/register.dart';
+import 'package:http/http.dart' as http;
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   Login({super.key});
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
+  void loginUser() async {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      var regBody = {"email": emailController, "password": passwordController};
+      var response = await http.post(Uri.parse('endpoint for login'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(regBody));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse['status']);
+      if (jsonResponse['status']) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const MyHomePage(title: "Home")));
+      }
+    } else {
+      print("Error while sending Registration information");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaquery = MediaQuery.of(context).size;

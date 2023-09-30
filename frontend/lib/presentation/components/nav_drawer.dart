@@ -53,6 +53,13 @@ class _NavDrawerState extends State<NavDrawer> {
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.add),
+                    title: const Text('Admin'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/admin');
+                    },
+                  ),
+                  ListTile(
                     leading: const Icon(Icons.logout),
                     title: const Text('Logout'),
                     onTap: () {
