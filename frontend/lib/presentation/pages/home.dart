@@ -4,6 +4,7 @@ import 'package:park_ease/classes/nearby_parkings.dart';
 import 'package:park_ease/data/models/parking_area.dart';
 import 'package:park_ease/providers/current_location_model.dart';
 import 'package:park_ease/presentation/components/panel_widget.dart';
+import 'package:park_ease/providers/vehicle_model.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -67,8 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Consumer<CurrentLocationModel>(
-                builder: (context, currentLocationModel, child) {
+              Consumer2<CurrentLocationModel, VehicleModel>(
+                builder: (context, currentLocationModel, vehicleModel, child) {
                   return Positioned(
                       right: 20,
                       bottom: fabHeight,
@@ -82,13 +83,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           // removing previously set parking markers
                           if (nearbyParkings.nearbyParkingAreas != null) {
-                            removeParkingMarkers(
+                             removeParkingMarkers(
                                 nearbyParkings.nearbyParkingAreas);
                           }
 
                           // initialize parking area based on given location
                           await nearbyParkings.setParkingAreas(
-                              location: currentLocationModel.currentLocation);
+                              location: currentLocationModel.currentLocation, vecType: vehicleModel.currentVehicle);
 
                           // initialize parking markers only after parking areas have been initialized
                           if (nearbyParkings.nearbyParkingAreas != null) {
