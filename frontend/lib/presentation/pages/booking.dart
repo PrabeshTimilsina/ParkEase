@@ -150,20 +150,20 @@ class _BookingState extends State<Booking> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(
+                  height: 20,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final int rate = widget.rate;
 
-              ElevatedButton(
-                onPressed: () {
-                  final double rate = widget.rate;
-
-                  final double hours =
-                      double.tryParse(hourController.text) ?? 0.0;
-                  setState(() {
-                    total = rate * hours;
-                  });
-                },
-                buttonName: 'Book',
-              ),
+                      final double hours =
+                          double.tryParse(hourController.text) ?? 0.0;
+                      setState(() {
+                        total = rate * hours;
+                      });
+                    },
+                    child: const Text('Book'),
+                  )),
               const SizedBox(height: 10),
               MyButton(
                   onTap: () {
