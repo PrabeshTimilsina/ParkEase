@@ -40,17 +40,27 @@ class _LocationPickerState extends State<LocationPicker> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    iconSize: 30,
-                    icon: const Icon(Icons.location_searching_sharp),
+                    iconSize: 40,
+                    icon: Icon(
+                      Icons.location_searching_sharp,
+                      color: Theme.of(context).primaryColor,
+                    ),
                     onPressed: () {
                       pickerController.osmBaseController.currentLocation();
                     },
                   ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                  ),
                   Consumer<CurrentLocationModel>(
                     builder: (context, currentLocation, child) {
                       return IconButton(
-                        iconSize: 30,
-                        icon: const Icon(Icons.arrow_circle_right_outlined),
+                        iconSize: 40,
+                        icon: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          color: Theme.of(context).primaryColor,
+                          size: 40,
+                        ),
                         onPressed: () async {
                           GeoPoint p = await pickerController
                               .selectAdvancedPositionPicker();
