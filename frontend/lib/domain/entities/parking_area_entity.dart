@@ -1,30 +1,29 @@
-enum ParkingAreaType { public, private }
-
-enum ParkableVehicles { car, bike, none }
 
 class ParkingAreaEntity {
   final String id;
   final String name;
   final double latitude;
   final double longitude;
-  final int maxCapacity;
+  /// In meters
+  final double distance;
+  /// To reach the parking area (in Minutes)
+  final double duration;  
+  final int availableSpaces;
+  /// assign this randomly (for now)
   final double ratings;
-  final double ratePerHour;
-  final ParkingAreaType parkingAreaType;
-  final List<ParkableVehicles> allowedVehicles; // Only car and bike for now
+  final int ratePerHour;
+  final String parkingAreaType;
 
-  const ParkingAreaEntity(
-      {required this.id,
+  const ParkingAreaEntity( 
+      {required this.distance,
+      required this.duration,
+      required this.id,
       required this.name,
       required this.latitude,
       required this.longitude,
-      required this.maxCapacity,
+      required this.availableSpaces,
       required this.ratings,
       this.ratePerHour = 0, // default zero for public parkings
-      this.parkingAreaType = ParkingAreaType.public, // default public parking
-      this.allowedVehicles = const [
-        ParkableVehicles.car,
-        ParkableVehicles.bike
-      ] // allowing both car and bike by default
+      this.parkingAreaType = "regulated", // default public parking // allowing both car and bike by default
       });
 }

@@ -14,7 +14,7 @@ class Booking extends StatefulWidget {
   final String name;
   final double rating;
   final double distance;
-  final double rate;
+  final int rate;
 
   @override
   _BookingState createState() => _BookingState();
@@ -138,7 +138,7 @@ class _BookingState extends State<Booking> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  final double rate = widget.rate;
+                  final int rate = widget.rate;
                   final double hours =
                       double.tryParse(hourController.text) ?? 0.0;
                   setState(() {
