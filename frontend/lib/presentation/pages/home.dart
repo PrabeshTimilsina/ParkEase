@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:park_ease/data/providers/current_location_model.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:park_ease/classes/nearby_parkings.dart';
+import 'package:park_ease/data/models/parking_area.dart';
+import 'package:park_ease/providers/current_location_model.dart';
 import 'package:park_ease/presentation/components/panel_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '/presentation/components/custom_appbar.dart';
@@ -19,6 +23,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const double fabHeightClosed = 116.0;
   double fabHeight = fabHeightClosed;
+
+  void removeParkingMarkers(List<ParkingAreaModel>? parkingAreas) async {
+    for (ParkingAreaModel parkingArea in parkingAreas!) {
+      removeParkingMarker(GeoPoint(
+          latitude: parkingArea.latitude, longitude: parkingArea.longitude));
+    }
+  }
+
+  void setParkingMarkers(List<ParkingAreaModel>? parkingAreas) async {
+    for (ParkingAreaModel parkingArea in parkingAreas!) {
+      addParkingMarker(GeoPoint(
+          latitude: parkingArea.latitude, longitude: parkingArea.longitude));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +61,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 position * panelMaxScrollExtent + fabHeightClosed * 0.75;
           }),
         ),
-        Positioned(right: 20, bottom: fabHeight, child: buildFAB(context)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Consumer<CurrentLocationModel>(
+              builder: (context, currentLocationModel, child) {
+                return Positioned(
+                    right: 20,
+                    bottom: fabHeight,
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          NearbyParkings nearbyParkings = NearbyParkings(
+                              currentLocation:
+                                  currentLocationModel.currentLocation);
+                          await nearbyParkings.setParkingAreas(
+                              location: currentLocationModel.currentLocation);
+
+                          // removing previously set parking markers
+                          if (nearbyParkings.nearbyParkingAreas != null) {
+                            removeParkingMarkers(
+                                nearbyParkings.nearbyParkingAreas);
+                          }
+
+                          // initialize parking area based on given location
+                          await nearbyParkings.setParkingAreas(
+                              location: currentLocationModel.currentLocation);
+
+                          // initialize parking markers only after parking areas have been initialized
+                          if (nearbyParkings.nearbyParkingAreas != null) {
+                            setParkingMarkers(
+                                nearbyParkings.nearbyParkingAreas);
+                          }
+                        },
+                        child: const Icon(Icons.local_parking)));
+              },
+            ),
+            Positioned(left: 20, bottom: fabHeight, child: buildFAB(context)),
+          ],
+        )
       ]),
     );
   }
@@ -54,13 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.white,
       ),
       onPressed: () {
-        try{
+        try {
           CurrentLocationModel().currentLocation;
-        }
-        catch (e)
-        {
-
-        }
+        } catch (e) {}
         mapController.currentLocation();
         mapController.setZoom(zoomLevel: 18);
       });

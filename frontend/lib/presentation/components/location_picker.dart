@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:park_ease/data/providers/current_location_model.dart';
+import 'package:park_ease/providers/current_location_model.dart';
 import 'package:park_ease/presentation/pages/home.dart';
 import 'package:provider/provider.dart';
 
