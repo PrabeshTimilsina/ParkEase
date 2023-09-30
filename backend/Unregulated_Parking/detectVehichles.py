@@ -33,8 +33,7 @@ import os
 import platform
 import sys
 from pathlib import Path
-from flask import Flask
-from flask import jsonify
+
 import redis
 import torch
 import json
@@ -166,6 +165,7 @@ def run(
             print(f'{class_counts}')
             class_counts_json =json.dumps(class_counts)
             r.set(parkingID,class_counts_json)
+            print(r.get(parkingID))
             print("Written to Redis")
 
             
