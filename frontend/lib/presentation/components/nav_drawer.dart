@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:park_ease/data/constants.dart';
 
+import 'dart:developer' as developer;
+
 class NavDrawer extends StatefulWidget {
   const NavDrawer({super.key});
 
@@ -72,7 +74,7 @@ class _NavDrawerState extends State<NavDrawer> {
                         headers: {"Content-Type": "application/json"},
                       );
                       var jsonResponse = jsonDecode(response.body);
-                      print(jsonResponse['success']);
+                      developer.log(jsonResponse['success']);
                       if (jsonResponse['success']) {
                         Navigator.pushNamed(context, '/signup');
                       } else {

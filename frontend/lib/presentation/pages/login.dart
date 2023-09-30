@@ -9,6 +9,8 @@ import 'package:park_ease/presentation/pages/home.dart';
 import 'package:park_ease/presentation/pages/register.dart';
 import 'package:http/http.dart' as http;
 
+import 'dart:developer' as developer;
+
 class Login extends StatefulWidget {
   Login({super.key});
 
@@ -30,8 +32,8 @@ class _LoginState extends State<Login> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(regBody));
     var jsonResponse = jsonDecode(response.body);
-    print(jsonResponse);
-    print(jsonResponse['success']);
+    developer.log(jsonResponse);
+    developer.log(jsonResponse['success']);
     if (jsonResponse['success']) {
       Navigator.push(
           context,

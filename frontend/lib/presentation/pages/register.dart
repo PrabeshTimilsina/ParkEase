@@ -6,6 +6,7 @@ import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/pages/home.dart';
 import 'package:http/http.dart' as http;
 import '../components/my_textfield.dart';
+import 'dart:developer' as developer;
 
 class Register extends StatefulWidget {
   Register({super.key});
@@ -33,12 +34,12 @@ class _RegisterState extends State<Register> {
         "password": passwordController.text,
         "confirmPassword": confirmPasswordController.text
       };
-      print(regBody);
+      developer.log(regBody.toString());
       var response = await http.post(Uri.parse(registration),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(regBody));
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse['success']);
+      developer.log(jsonResponse['success']);
       if (jsonResponse['success']) {
         Navigator.push(
             context,
@@ -46,7 +47,7 @@ class _RegisterState extends State<Register> {
                 builder: (context) => const MyHomePage(title: "Home")));
       }
     } else {
-      print("Error while sending Registration information");
+      developer.log("Error while sending Registration information");
     }
   }
 

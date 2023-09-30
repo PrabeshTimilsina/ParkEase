@@ -8,6 +8,8 @@ import 'package:park_ease/presentation/pages/home.dart';
 import 'package:http/http.dart' as http;
 import '../components/my_textfield.dart';
 
+import 'dart:developer' as developer;
+
 class Admin extends StatefulWidget {
   Admin({super.key});
 
@@ -53,7 +55,7 @@ class _AdminState extends State<Admin> {
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(regBody));
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse['sucess']);
+      developer.log(jsonResponse['sucess']);
       if (jsonResponse['sucess']) {
         Navigator.push(
             context,
@@ -61,7 +63,7 @@ class _AdminState extends State<Admin> {
                 builder: (context) => const MyHomePage(title: "Home")));
       }
     } else {
-      print("Error while sending Registration information");
+      developer.log("Error while sending Registration information");
     }
   }
 
