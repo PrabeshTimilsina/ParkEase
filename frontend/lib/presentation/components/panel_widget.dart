@@ -10,13 +10,23 @@ import 'package:provider/provider.dart';
 
 var Vehicle;
 
-class PanelWidget extends StatelessWidget {
+class PanelWidget extends StatefulWidget {
   final ScrollController controller;
+
   const PanelWidget({super.key, required this.controller});
 
   @override
+  State<PanelWidget> createState() => _PanelWidgetState();
+}
+
+class _PanelWidgetState extends State<PanelWidget> {
+  bool isbike = false;
+
+  bool iscar = false;
+
+  @override
   Widget build(BuildContext context) => ListView(
-        controller: controller,
+        controller: widget.controller,
         padding: EdgeInsets.zero,
         children: [
           const SizedBox(
@@ -27,23 +37,34 @@ class PanelWidget extends StatelessWidget {
             height: 30,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.1,
+              ),
               InkWell(
                 onTap: () {
+                  isbike = !isbike;
+                  iscar = false;
                   Vehicle = 'Bike';
+                  setState(() {});
                 },
-                child:
-                    const SquareTile(imageLocation: 'assets/images/bike.jpg'),
+                child: SquareTile(
+                  isselected: isbike,
+                  imageLocation: 'assets/images/bike.jpg',
+                ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.2,
+                width: MediaQuery.of(context).size.width * 0.1,
               ),
               InkWell(
                 onTap: () {
                   Vehicle = 'Car';
+                  iscar = !iscar;
+                  isbike = false;
+                  setState(() {});
                 },
-                child: const SquareTile(imageLocation: 'assets/images/car.jpg'),
+                child: SquareTile(
+                    isselected: iscar, imageLocation: 'assets/images/car.jpg'),
               ),
             ],
           ),
@@ -77,20 +98,25 @@ class PanelWidget extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          Consumer<CurrentLocationModel>( builder: (context, currentLocationModel, child) {
+          Consumer<CurrentLocationModel>(
+              builder: (context, currentLocationModel, child) {
             return MyButton(
               onTap: () async {
-                
-                NearbyParkings nearbyParkings = NearbyParkings(currentLocation: currentLocationModel.currentLocation);
-                await nearbyParkings.setParkingAreas(location: currentLocationModel.currentLocation);
+                NearbyParkings nearbyParkings = NearbyParkings(
+                    currentLocation: currentLocationModel.currentLocation);
+                await nearbyParkings.setParkingAreas(
+                    location: currentLocationModel.currentLocation);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => parkingList(nearbyParkings: nearbyParkings,)),
+                  MaterialPageRoute(
+                      builder: (context) => parkingList(
+                            nearbyParkings: nearbyParkings,
+                          )),
                 );
               },
               buttonName: 'Nearest Parking',
-            );}
-          )
+            );
+          })
         ],
       );
 }
