@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:park_ease/data/constants.dart';
@@ -7,28 +9,46 @@ import 'package:park_ease/presentation/pages/home.dart';
 import 'package:http/http.dart' as http;
 import '../components/my_textfield.dart';
 
-class Register extends StatefulWidget {
-  Register({super.key});
+class Admin extends StatefulWidget {
+  Admin({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<Admin> createState() => _AdminState();
 }
 
-class _RegisterState extends State<Register> {
-  final emailController = TextEditingController();
+class _AdminState extends State<Admin> {
+  final locationController = TextEditingController();
 
-  final passwordController = TextEditingController();
-
-  final addressController = TextEditingController();
+  final typeController = TextEditingController();
 
   final nameController = TextEditingController();
+  final vehicleController = TextEditingController();
+  final capacityController = TextEditingController();
+  double rating = Random().nextDouble();
 
-  void registerUser() async {
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+  void registerPark() async {
+    if (nameController.text.isNotEmpty &&
+        locationController.text.isNotEmpty &&
+        vehicleController.text.isNotEmpty &&
+        typeController.text.isNotEmpty &&
+        capacityController.text.isNotEmpty) {
       var regBody = {
         "name": nameController,
-        "email": emailController,
-        "password": passwordController
+        "location": {
+          {
+            "address": locationController,
+            "latitude": "something",
+            "longitude": "something"
+          }
+        },
+        "categories": [
+          {
+            "vehicleType": vehicleController,
+            "rate": rating,
+            "capacity": capacityController
+          }
+        ],
+        "parkingType": typeController,
       };
       var response = await http.post(Uri.parse(registration),
           headers: {"Content-Type": "application/json"},
@@ -56,12 +76,19 @@ class _RegisterState extends State<Register> {
             child: Column(
               children: [
                 SizedBox(height: mediaquery.height * 0.05),
-                Image.asset(
-                  'assets/images/Logo.png',
-                  width: mediaquery.height * 0.18,
-                  height: mediaquery.height * 0.18,
+                const Text(
+                  "Register your Park",
+                  textAlign: TextAlign.center,
+                  textScaleFactor: 2.0,
                 ),
-                SizedBox(height: mediaquery.height * 0.025),
+                SizedBox(height: mediaquery.height * 0.01),
+                const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: Divider(
+                      height: 5,
+                      color: Colors.white,
+                    )),
+                SizedBox(height: mediaquery.height * 0.05),
                 MyTextField(
                   controller: nameController,
                   hintText: 'Name',
@@ -69,33 +96,33 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 MyTextField(
-                  controller: emailController,
-                  hintText: 'email',
+                  controller: locationController,
+                  hintText: 'location',
                   obscureText: false,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 MyTextField(
-                  controller: addressController,
-                  hintText: 'address',
+                  controller: vehicleController,
+                  hintText: 'vehicle type',
                   obscureText: false,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 MyTextField(
-                  controller: passwordController,
-                  hintText: 'password',
+                  controller: typeController,
+                  hintText: 'parking type',
                   obscureText: true,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 MyTextField(
-                  controller: passwordController,
-                  hintText: 'Confirm password',
+                  controller: capacityController,
+                  hintText: 'Capacity',
                   obscureText: true,
                 ),
-                SizedBox(height: mediaquery.height * 0.025),
+                SizedBox(height: mediaquery.height * 0.1),
                 MyButton(
-                  buttonName: 'Sign up',
+                  buttonName: 'Submit',
                   onTap: () {
-                    registerUser();
+                    // registerPark();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -104,22 +131,6 @@ class _RegisterState extends State<Register> {
                   },
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const MyHomePage(title: "Home")));
-                  },
-                  child: const Text(
-                    'Continue as Guest',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                ),
               ],
             ),
           ),

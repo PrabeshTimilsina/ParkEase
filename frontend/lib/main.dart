@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:park_ease/presentation/pages/admin.dart';
 import 'package:park_ease/providers/current_address_model.dart';
 import 'package:park_ease/providers/current_location_model.dart';
 import 'package:park_ease/presentation/pages/home.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
                 title: "Home",
               ),
           '/signup': (BuildContext context) => const Placeholder(),
+          '/admin': (BuildContext context) => Admin(),
           '/logout': (BuildContext context) => const Placeholder(),
           '/quit': (BuildContext context) => const Placeholder(),
           '/settings': (BuildContext context) => const Placeholder(),
