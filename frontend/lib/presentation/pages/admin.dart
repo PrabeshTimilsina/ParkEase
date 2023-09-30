@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -50,12 +49,12 @@ class _AdminState extends State<Admin> {
         ],
         "parkingType": typeController,
       };
-      var response = await http.post(Uri.parse(registration),
+      var response = await http.post(Uri.parse(registerlocation),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(regBody));
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse['status']);
-      if (jsonResponse['status']) {
+      print(jsonResponse['sucess']);
+      if (jsonResponse['sucess']) {
         Navigator.push(
             context,
             MaterialPageRoute(

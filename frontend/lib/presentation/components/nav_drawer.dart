@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:park_ease/data/constants.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({super.key});
@@ -62,8 +66,18 @@ class _NavDrawerState extends State<NavDrawer> {
                   ListTile(
                     leading: const Icon(Icons.logout),
                     title: const Text('Logout'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/logout');
+                    onTap: () async {
+                      var response = await http.get(
+                        Uri.parse(logout),
+                        headers: {"Content-Type": "application/json"},
+                      );
+                      var jsonResponse = jsonDecode(response.body);
+                      print(jsonResponse['success']);
+                      if (jsonResponse['success']) {
+                        Navigator.pushNamed(context, '/signup');
+                      } else {
+                        Navigator.pushNamed(context, '/signup');
+                      }
                     },
                   ),
                   ListTile(

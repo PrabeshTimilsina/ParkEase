@@ -28,17 +28,18 @@ class _RegisterState extends State<Register> {
   void registerUser() async {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       var regBody = {
-        "name": nameController,
-        "email": emailController,
-        "password": passwordController,
-        "confirmPassword": confirmPasswordController
+        "name": nameController.text,
+        "email": emailController.text,
+        "password": passwordController.text,
+        "confirmPassword": confirmPasswordController.text
       };
+      print(regBody);
       var response = await http.post(Uri.parse(registration),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(regBody));
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse['status']);
-      if (jsonResponse['status']) {
+      print(jsonResponse['success']);
+      if (jsonResponse['success']) {
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -99,11 +100,11 @@ class _RegisterState extends State<Register> {
                   buttonName: 'Sign up',
                   onTap: () {
                     registerUser();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const MyHomePage(title: "Home")));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             const MyHomePage(title: "Home")));
                   },
                 ),
                 SizedBox(height: mediaquery.height * 0.025),

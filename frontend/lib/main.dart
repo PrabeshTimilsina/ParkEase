@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           '/home': (BuildContext context) => const MyHomePage(
                 title: "Home",
               ),
-          '/signup': (BuildContext context) => const Placeholder(),
+          '/signup': (BuildContext context) => Login(),
           '/admin': (BuildContext context) => Admin(),
           '/logout': (BuildContext context) => const Placeholder(),
           '/quit': (BuildContext context) => const Placeholder(),
