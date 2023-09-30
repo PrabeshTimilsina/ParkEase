@@ -6,9 +6,9 @@ import 'package:park_ease/presentation/components/custom_appbar.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
 import 'package:park_ease/providers/current_location_model.dart';
+import 'package:park_ease/providers/vehicle_model.dart';
 import 'package:provider/provider.dart';
-
-var Vehicle;
+import 'dart:developer' as developer;
 
 class PanelWidget extends StatelessWidget {
   final ScrollController controller;
@@ -26,26 +26,31 @@ class PanelWidget extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  Vehicle = 'Bike';
-                },
-                child:
-                    const SquareTile(imageLocation: 'assets/images/bike.jpg'),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.2,
-              ),
-              InkWell(
-                onTap: () {
-                  Vehicle = 'Car';
-                },
-                child: const SquareTile(imageLocation: 'assets/images/car.jpg'),
-              ),
-            ],
+          Consumer<VehicleModel>(
+            builder: (context, vehicleModel, child) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      vehicleModel.setVehicle('MotorCycle');
+                    },
+                    child: const SquareTile(
+                        imageLocation: 'assets/images/bike.jpg'),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      vehicleModel.setVehicle("Car");
+                    },
+                    child: const SquareTile(
+                        imageLocation: 'assets/images/car.jpg'),
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(
             height: 15,
@@ -77,20 +82,26 @@ class PanelWidget extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          Consumer<CurrentLocationModel>( builder: (context, currentLocationModel, child) {
+          Consumer2<CurrentLocationModel, VehicleModel>(
+              builder: (context, currentLocationModel,vehicleModel, child) {
             return MyButton(
               onTap: () async {
-                
-                NearbyParkings nearbyParkings = NearbyParkings(currentLocation: currentLocationModel.currentLocation);
-                await nearbyParkings.setParkingAreas(location: currentLocationModel.currentLocation);
+                NearbyParkings nearbyParkings = NearbyParkings(
+                    currentLocation: currentLocationModel.currentLocation);
+                developer.log("vehicle type ${vehicleModel.currentVehicle}");
+                await nearbyParkings.setParkingAreas(
+                    location: currentLocationModel.currentLocation, vecType: vehicleModel.currentVehicle);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => parkingList(nearbyParkings: nearbyParkings,)),
+                  MaterialPageRoute(
+                      builder: (context) => parkingList(
+                            nearbyParkings: nearbyParkings,
+                          )),
                 );
               },
               buttonName: 'Nearest Parking',
-            );}
-          )
+            );
+          })
         ],
       );
 }
