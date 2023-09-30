@@ -35,8 +35,10 @@ import sys
 from pathlib import Path
 from flask import Flask
 from flask import jsonify
-
+import redis
 import torch
+import json
+import asyncio
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -56,12 +58,18 @@ from yolov5.utils.torch_utils import select_device, smart_inference_mode
 
 default_class=[2,3]
 class_names = {
-    2: 'Car',
-    3: 'Bike',
+    2: 'carCapaity',
+    3: 'bikeCapacity',
     # Add more class names as needed
 }
-app=Flask(__name__)
-@app.route("/run",methods=['GET'])
+redis_host='localhost'
+redis_port=6379
+redis_db=0
+r = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db)
+parkingID="651729baa7c15d055db22586"
+
+# app=Flask(__name__)
+# @app.route("/run",methods=['GET'])
 def run(
         weights='./models/yolov5x.pt',  # model path or triton URL
         source='./img/park.jpg',  # file/dir/URL/glob/screen/0(webcam)
@@ -156,7 +164,9 @@ def run(
                 class_counts = {class_names.get(cls,'Unknown'): det_classes.tolist().count(cls) for cls in unique_classes}
            
             print(f'{class_counts}')
-            return class_counts
+            class_counts_json =json.dumps(class_counts)
+            r.set(parkingID,class_counts_json)
+            print("Written to Redis")
 
             
                 
@@ -281,13 +291,15 @@ def parse_opt():
     return opt
 
 
-def main():
-    app.run(host="0.0.0.0", port=8080)
-    # opt = parse_opt()
-    # check_requirements(exclude=('tensorboard', 'thop'))
-    # run(**vars(opt))
-
-
-if __name__ == "__main__":
+async def main():
+    opt = parse_opt()
+    check_requirements(exclude=('tensorboard', 'thop'))
     
-    main()
+    while True:
+        run(**vars(opt))
+        await asyncio.sleep(20)
+
+# Define an event loop and run the async main function
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
