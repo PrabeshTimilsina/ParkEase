@@ -38,41 +38,41 @@ class _PanelWidgetState extends State<PanelWidget> {
           ),
           Consumer<VehicleModel>(
             builder: (context, vehicleModel, child) {
-              return  Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.1,
-              ),
-              InkWell(
-                onTap: () {
-                  vehicleModel.setVehicle('MotorCycle');
-                  isbike = !isbike;
-                  iscar = false;
-                  
-                  setState(() {});
-                },
-                child: SquareTile(
-                  isselected: isbike,
-                  imageLocation: 'assets/images/bike.jpg',
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.1,
-              ),
-              InkWell(
-                onTap: () {
-                  vehicleModel.setVehicle("Car");
-                  iscar = !iscar;
-                  isbike = false;
-                  setState(() {});
-                },
-                child: SquareTile(
-                    isselected: iscar, imageLocation: 'assets/images/car.jpg'),
-              ),
-            ],
+              return Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.1,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      vehicleModel.setVehicle('Motorcycle');
+                      isbike = !isbike;
+                      iscar = false;
+
+                      setState(() {});
+                    },
+                    child: SquareTile(
+                      isselected: isbike,
+                      imageLocation: 'assets/images/bike.jpg',
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.1,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      vehicleModel.setVehicle("Car");
+                      iscar = !iscar;
+                      isbike = false;
+                      setState(() {});
+                    },
+                    child: SquareTile(
+                        isselected: iscar,
+                        imageLocation: 'assets/images/car.jpg'),
+                  ),
+                ],
               );
             },
-
           ),
           const SizedBox(
             height: 15,
@@ -104,9 +104,8 @@ class _PanelWidgetState extends State<PanelWidget> {
           const SizedBox(
             height: 15,
           ),
-
           Consumer2<CurrentLocationModel, VehicleModel>(
-              builder: (context, currentLocationModel,vehicleModel, child) {
+              builder: (context, currentLocationModel, vehicleModel, child) {
             return MyButton(
               onTap: () async {
                 NearbyParkings nearbyParkings = NearbyParkings(
@@ -114,7 +113,8 @@ class _PanelWidgetState extends State<PanelWidget> {
 
                 developer.log("vehicle type ${vehicleModel.currentVehicle}");
                 await nearbyParkings.setParkingAreas(
-                    location: currentLocationModel.currentLocation, vecType: vehicleModel.currentVehicle);
+                    location: currentLocationModel.currentLocation,
+                    vecType: vehicleModel.currentVehicle);
 
                 Navigator.push(
                   context,
