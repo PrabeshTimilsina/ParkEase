@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:park_ease/data/providers/current_address_model.dart';
-import 'package:park_ease/data/providers/current_location_model.dart';
+import 'package:park_ease/classes/nearby_parkings.dart';
+import 'package:park_ease/presentation/pages/parking_lists.dart';
+import 'package:park_ease/providers/current_address_model.dart';
 import 'package:park_ease/presentation/components/custom_appbar.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
-import 'package:park_ease/presentation/components/my_textfield.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
+import 'package:park_ease/providers/current_location_model.dart';
 import 'package:provider/provider.dart';
 
 class PanelWidget extends StatelessWidget {
@@ -68,14 +69,19 @@ class PanelWidget extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          MyButton(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Placeholder()),
-              );
-            },
-            buttonName: 'Nearest Parking',
+          Consumer<CurrentLocationModel>( builder: (context, currentLocationModel, child) {
+            return MyButton(
+              onTap: () async {
+                
+                NearbyParkings nearbyParkings = NearbyParkings(currentLocation: currentLocationModel.currentLocation);
+                await nearbyParkings.setParkingAreas(location: currentLocationModel.currentLocation);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => parkingList(nearbyParkings: nearbyParkings,)),
+                );
+              },
+              buttonName: 'Nearest Parking',
+            );}
           )
         ],
       );

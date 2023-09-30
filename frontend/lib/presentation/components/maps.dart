@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-import 'package:park_ease/data/providers/current_location_model.dart';
+import 'package:park_ease/providers/current_location_model.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as developer;
 
@@ -127,6 +127,22 @@ class _MapsState extends State<Maps> {
 
             await mapController.setZoom(
                 zoomLevel: 18); // zooming to max zoom level
+
+            if (currentLocation.currentLocation != null) {
+              // removing all previously drawn roads
+              await mapController.clearAllRoads();
+
+              RoadInfo roadInfo = await mapController.drawRoad(
+                currentLocation.currentLocation!,
+                point,
+                roadType: RoadType.car,
+                roadOption: const RoadOption(
+                  roadWidth: 10,
+                  roadColor: Colors.blue,
+                  zoomInto: true,
+                ),
+              );
+            }
           },
         );
       }),
@@ -157,7 +173,8 @@ class _MapsState extends State<Maps> {
 
 void addParkingMarker(GeoPoint parkingLocation) async {
   await mapController.addMarker(parkingLocation,
-      markerIcon: const MarkerIcon(icon: Icon(Icons.not_listed_location_sharp)),
+      markerIcon: const MarkerIcon(
+          icon: Icon(Icons.not_listed_location_sharp, color: Colors.black)),
       iconAnchor: IconAnchor(
         anchor: Anchor.top,
       ));
