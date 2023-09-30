@@ -19,6 +19,8 @@ class _RegisterState extends State<Register> {
 
   final passwordController = TextEditingController();
 
+  final confirmPasswordController = TextEditingController();
+
   final addressController = TextEditingController();
 
   final nameController = TextEditingController();
@@ -28,7 +30,8 @@ class _RegisterState extends State<Register> {
       var regBody = {
         "name": nameController,
         "email": emailController,
-        "password": passwordController
+        "password": passwordController,
+        "confirmPassword": confirmPasswordController
       };
       var response = await http.post(Uri.parse(registration),
           headers: {"Content-Type": "application/json"},
@@ -87,7 +90,7 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 MyTextField(
-                  controller: passwordController,
+                  controller: confirmPasswordController,
                   hintText: 'Confirm password',
                   obscureText: true,
                 ),
