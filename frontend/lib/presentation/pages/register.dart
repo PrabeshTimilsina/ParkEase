@@ -1,16 +1,51 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:park_ease/data/constants.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/pages/home.dart';
-
+import 'package:http/http.dart' as http;
 import '../components/my_textfield.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   Register({super.key});
 
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   final addressController = TextEditingController();
+
   final nameController = TextEditingController();
+
+  void registerUser() async {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      var regBody = {
+        "name": nameController,
+        "email": emailController,
+        "password": passwordController
+      };
+      var response = await http.post(Uri.parse(registration),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(regBody));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse['status']);
+      if (jsonResponse['status']) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const MyHomePage(title: "Home")));
+      }
+    } else {
+      print("Error while sending Registration information");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaquery = MediaQuery.of(context).size;
@@ -63,8 +98,12 @@ class Register extends StatelessWidget {
                 SizedBox(height: mediaquery.height * 0.025),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const MyHomePage(title: "Home")));
+                    registerUser();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MyHomePage(title: "Home")));
                   },
                   child: const Text(
                     'Continue as Guest',
