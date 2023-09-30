@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:park_ease/data/providers/current_address_model.dart';
+import 'package:park_ease/providers/current_address_model.dart';
 import 'package:park_ease/presentation/pages/location_selection.dart';
 import 'package:park_ease/presentation/components/location_picker.dart';
 import 'package:provider/provider.dart';
@@ -118,7 +118,7 @@ class MySearchDelegate extends SearchDelegate {
                   },
                 );
               },
-              itemCount: snapshot.data!.length,
+              itemCount: (snapshot.data == null) ? 0 : snapshot.data!.length,
             );
           } else {
             return ListView();
