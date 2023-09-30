@@ -87,6 +87,9 @@ async function calculateDistances(latitude, longitude, vehicleType) {
           desiredLocation.location.latitude,
           desiredLocation.location.longitude
         );
+        const myhourlyrate = desiredLocation.categories.filter(
+          (space) => space.vehicleType === vehicleType
+        );
         const destination = `${desiredLocation.location.longitude},${desiredLocation.location.latitude}`;
         const osrmURL = `${osrmBaseURL}${longitude},${latitude};${destination}${options}`;
 
@@ -99,16 +102,19 @@ async function calculateDistances(latitude, longitude, vehicleType) {
           const duration = route.duration;
 
           // Store destination information in the destinationsInfo array
+          
           destinationsInfo.push({
             _id: desiredLocation._id,
             name: desiredLocation.name,
             latitude: desiredLocation.location.latitude,
             longitude: desiredLocation.location.longitude,
             distance: distance,
-            
+            hourlyRate:myhourlyrate[0].rate,
             duration: duration,
             availableSpaces: availableSpaces,
+            parkingType:desiredLocation.parkingType
           });
+         
 
           console.log(
             `Distance from user location to ${desiredLocation.location.address}: ${distance} meters`
