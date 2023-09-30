@@ -61,16 +61,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 position * panelMaxScrollExtent + fabHeightClosed * 0.75;
           }),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Consumer<CurrentLocationModel>(
-              builder: (context, currentLocationModel, child) {
-                return Positioned(
-                    right: 20,
-                    bottom: fabHeight,
-                    child: ElevatedButton(
-                        onPressed: () async {
+        Positioned(
+          left: 20,
+          bottom: fabHeight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Consumer<CurrentLocationModel>(
+                builder: (context, currentLocationModel, child) {
+                  return Positioned(
+                      right: 20,
+                      bottom: fabHeight,
+                      child: InkWell(
+                        onTap: () async {
                           NearbyParkings nearbyParkings = NearbyParkings(
                               currentLocation:
                                   currentLocationModel.currentLocation);
@@ -93,12 +96,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                 nearbyParkings.nearbyParkingAreas);
                           }
                         },
-                        child: const Icon(Icons.local_parking)));
-              },
-            ),
-            Positioned(left: 20, bottom: fabHeight, child: buildFAB(context)),
-          ],
-        )
+                        child: Container(
+                            height: 55,
+                            width: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(27),
+                                color: Theme.of(context).primaryColor),
+                            child: const Icon(Icons.local_parking)),
+                      ));
+                },
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.60),
+              buildFAB(context),
+            ],
+          ),
+        ),
       ]),
     );
   }
