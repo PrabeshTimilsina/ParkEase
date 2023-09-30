@@ -4,8 +4,8 @@ import 'package:park_ease/presentation/components/my_textfield.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
 import 'package:park_ease/presentation/pages/register.dart';
 
-class Home extends StatelessWidget {
-  Home({super.key});
+class Login extends StatelessWidget {
+  Login({super.key});
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -21,8 +21,8 @@ class Home extends StatelessWidget {
                 SizedBox(height: mediaquery.height * 0.05),
                 Image.asset(
                   'assets/images/Logo.png',
-                  width: 150,
-                  height: 150,
+                  width: 130,
+                  height: 130,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 const Text(
