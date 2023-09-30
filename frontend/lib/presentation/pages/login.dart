@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:park_ease/data/constants.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/my_textfield.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
@@ -21,21 +22,21 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
 
   void loginUser() async {
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      var regBody = {"email": emailController, "password": passwordController};
-      var response = await http.post(Uri.parse('endpoint for login'),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(regBody));
-      var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse['status']);
-      if (jsonResponse['status']) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const MyHomePage(title: "Home")));
-      }
-    } else {
-      print("Error while sending Registration information");
+    var regBody = {
+      "email": emailController.text,
+      "password": passwordController.text
+    };
+    var response = await http.post(Uri.parse(login),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(regBody));
+    var jsonResponse = jsonDecode(response.body);
+    print(jsonResponse);
+    print(jsonResponse['success']);
+    if (jsonResponse['success']) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const MyHomePage(title: "Home")));
     }
   }
 
@@ -80,8 +81,9 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   height: mediaquery.height * 0.025,
                 ),
-                const MyButton(
+                MyButton(
                   buttonName: 'Login',
+                  onTap: loginUser,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 const Padding(
@@ -113,11 +115,15 @@ class _LoginState extends State<Login> {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareTile(imageLocation: 'assets/images/google.png'),
+                    SquareTile(
+                        isselected: false,
+                        imageLocation: 'assets/images/google.png'),
                     SizedBox(
                       width: 100,
                     ),
-                    SquareTile(imageLocation: 'assets/images/apple.png')
+                    SquareTile(
+                        isselected: false,
+                        imageLocation: 'assets/images/apple.png')
                   ],
                 ),
                 SizedBox(height: mediaquery.height * 0.05),
