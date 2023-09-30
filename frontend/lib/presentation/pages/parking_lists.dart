@@ -11,13 +11,10 @@ class parkingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: const NavDrawer(),
         appBar: AppBar(
-            leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            NavDrawer();
-          },
-        )),
+          title: const Center(child: Text("Parking List")),
+        ),
         body: (nearbyParkings == null ||
                 nearbyParkings!.nearbyParkingAreas == null)
             ? const Center(child: Text("Didn't find any parking areas."))
@@ -41,7 +38,7 @@ class parkingList extends StatelessWidget {
                     margin: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,6 +62,11 @@ class parkingList extends StatelessWidget {
                             const Icon(Icons.star),
                           ],
                         ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text('Price: ${parkingArea.ratePerHour.toString()}/Hr',
+                            style: const TextStyle(fontSize: 16)),
                         Row(
                           children: [
                             Text(' ${parkingArea.longitude} address',
