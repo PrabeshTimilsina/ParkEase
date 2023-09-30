@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:park_ease/data/providers/current_address_model.dart';
 import 'package:park_ease/presentation/pages/location_selection.dart';
 import 'package:park_ease/presentation/components/location_picker.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppBar extends AppBar {
   CustomAppBar({super.key, required this.customTitle});
@@ -90,26 +92,31 @@ class MySearchDelegate extends SearchDelegate {
             return ListView.builder(
               itemExtent: 50.0,
               itemBuilder: (ctx, index) {
-                return ListTile(
-                    title: Text(
-                      suggestions.elementAt(index),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                    ),
-                    onTap: () {
-                      // serializing the point
-                      // developer.log(
-                      //     "Sent point: GeoPoint{ latitude: ${searchInfos[index].point!.latitude}, longitude: ${searchInfos[index].point!.latitude}}");
-                      // query = "${searchInfos[index].point!.latitude},${searchInfos[index].point!.longitude}";
-                      // buildResults(context);
-
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LocationSelection(
-                                initialLocation: searchInfos[index].point,
-                                initialAddress:
-                                    searchInfos[index].address.toString(),
-                              )));
-                    });
+                return Consumer<CurrentAddressModel>(
+                  builder: (context, currentAddressModel, child) {
+                    return ListTile(
+                        title: Text(
+                          suggestions.elementAt(index),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                        ),
+                        onTap: () {
+                          // serializing the point
+                          // developer.log(
+                          //     "Sent point: GeoPoint{ latitude: ${searchInfos[index].point!.latitude}, longitude: ${searchInfos[index].point!.latitude}}");
+                          // query = "${searchInfos[index].point!.latitude},${searchInfos[index].point!.longitude}";
+                          // buildResults(context);
+                          context.read<CurrentAddressModel>().setCurrentAddress(
+                              searchInfos[index].address.toString());
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LocationSelection(
+                                    initialLocation: searchInfos[index].point,
+                                    initialAddress:
+                                        searchInfos[index].address.toString(),
+                                  )));
+                        });
+                  },
+                );
               },
               itemCount: snapshot.data!.length,
             );

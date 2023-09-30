@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:park_ease/data/providers/current_location_model.dart';
 import 'package:park_ease/presentation/components/panel_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -53,6 +54,13 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.white,
       ),
       onPressed: () {
+        try{
+          CurrentLocationModel().currentLocation;
+        }
+        catch (e)
+        {
+
+        }
         mapController.currentLocation();
         mapController.setZoom(zoomLevel: 18);
       });
