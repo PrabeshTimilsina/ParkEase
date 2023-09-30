@@ -22,7 +22,7 @@ exports.registerLocation = tryCatchAsync(async (req, res, next) => {
 
 exports.confirmparking = tryCatchAsync(async (req, res, next) => {
   const {
-    userId,
+    
     latitude,
     longitude,
     vehicleType,
@@ -70,7 +70,7 @@ exports.confirmparking = tryCatchAsync(async (req, res, next) => {
     //parkingSpace.isOccupied = true;
     parkingSpace.capacity = parkingSpace.capacity - 1;
     await parkingLocation.save();
-
+    userId= req.user.id
     // Create a new UserReservation document
     const reservation = new UserReservation({
       userId,

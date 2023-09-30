@@ -105,6 +105,7 @@ async function calculateDistances(latitude, longitude, vehicleType) {
             latitude: desiredLocation.location.latitude,
             longitude: desiredLocation.location.longitude,
             distance: distance,
+            
             duration: duration,
             availableSpaces: availableSpaces,
           });
