@@ -6,9 +6,9 @@ import 'package:park_ease/presentation/components/custom_appbar.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
 import 'package:park_ease/providers/current_location_model.dart';
+import 'package:park_ease/providers/vehicle_model.dart';
 import 'package:provider/provider.dart';
-
-var Vehicle;
+import 'dart:developer' as developer;
 
 class PanelWidget extends StatefulWidget {
   final ScrollController controller;
@@ -36,16 +36,19 @@ class _PanelWidgetState extends State<PanelWidget> {
           const SizedBox(
             height: 30,
           ),
-          Row(
+          Consumer<VehicleModel>(
+            builder: (context, vehicleModel, child) {
+              return  Row(
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.1,
               ),
               InkWell(
                 onTap: () {
+                  vehicleModel.setVehicle('MotorCycle');
                   isbike = !isbike;
                   iscar = false;
-                  Vehicle = 'Bike';
+                  
                   setState(() {});
                 },
                 child: SquareTile(
@@ -58,7 +61,7 @@ class _PanelWidgetState extends State<PanelWidget> {
               ),
               InkWell(
                 onTap: () {
-                  Vehicle = 'Car';
+                  vehicleModel.setVehicle("Car");
                   iscar = !iscar;
                   isbike = false;
                   setState(() {});
@@ -67,6 +70,9 @@ class _PanelWidgetState extends State<PanelWidget> {
                     isselected: iscar, imageLocation: 'assets/images/car.jpg'),
               ),
             ],
+              );
+            },
+
           ),
           const SizedBox(
             height: 15,
@@ -98,14 +104,18 @@ class _PanelWidgetState extends State<PanelWidget> {
           const SizedBox(
             height: 15,
           ),
-          Consumer<CurrentLocationModel>(
-              builder: (context, currentLocationModel, child) {
+
+          Consumer2<CurrentLocationModel, VehicleModel>(
+              builder: (context, currentLocationModel,vehicleModel, child) {
             return MyButton(
               onTap: () async {
                 NearbyParkings nearbyParkings = NearbyParkings(
                     currentLocation: currentLocationModel.currentLocation);
+
+                developer.log("vehicle type ${vehicleModel.currentVehicle}");
                 await nearbyParkings.setParkingAreas(
-                    location: currentLocationModel.currentLocation);
+                    location: currentLocationModel.currentLocation, vecType: vehicleModel.currentVehicle);
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(

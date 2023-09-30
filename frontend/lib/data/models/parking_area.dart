@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:park_ease/domain/entities/parking_area_entity.dart';
 
 class ParkingAreaModel extends ParkingAreaEntity {
@@ -6,30 +8,28 @@ class ParkingAreaModel extends ParkingAreaEntity {
       required super.name,
       required super.latitude,
       required super.longitude,
-      required super.maxCapacity,
+      required super.availableSpaces,
       required super.ratings,
       super.ratePerHour,
-      super.parkingAreaType,
-      super.allowedVehicles});
+      super.parkingAreaType = "regulated",
+      required super.distance, 
+      required super.duration,});
 
   factory ParkingAreaModel.fromJSON(Map<String, dynamic> map) {
-    ParkingAreaType? parkingAreaType = map["parkingAreaType"];
+    String? parkingAreaType = map["parkingAreaType"];
     // defaulting to public if nothing is given
-    parkingAreaType ??= ParkingAreaType.public;
-
-    List<ParkableVehicles>? allowedVehicles = map["allowedVehicles"];
-    // defaulting to bike and car
-    allowedVehicles ??= const [ParkableVehicles.bike, ParkableVehicles.car];
+    parkingAreaType ??= "unregulated";
 
     return ParkingAreaModel(
-        id: map["id"],
+        id: map["_id"],
         name: map["name"],
         latitude: map["latitude"],
         longitude: map["longitude"],
-        maxCapacity: map["maxCapcacity"],
-        ratings: map["ratings"],
-        ratePerHour: map["ratePerHour"],
-        parkingAreaType: parkingAreaType,
-        allowedVehicles: allowedVehicles);
+        availableSpaces: map["availableSpaces"],
+        ratings: Random().nextDouble(),
+        ratePerHour: map["hourlyRate"],
+        distance: map["distance"].toDouble(),
+        duration: map["duration"],
+        parkingAreaType: parkingAreaType);
   }
 }
