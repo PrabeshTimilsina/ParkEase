@@ -1,6 +1,6 @@
 import 'dart:isolate';
 
-import 'package:park_ease/data/data_sources/local/parking_area_data.dart';
+import 'package:park_ease/data/data_sources/remote/parking_area_data_remote.dart';
 import 'package:park_ease/data/models/parking_area.dart';
 import 'package:park_ease/domain/repository/parking_area_repository.dart';
 
@@ -9,9 +9,9 @@ class ParkingAreaRepositoryImpl implements ParkingAreaRepository {
   List<ParkingAreaModel> areas = [];
 
   @override
-  Future<List<ParkingAreaModel>> getParkingAreas(double latitude, double longitude) async {
+  Future<List<ParkingAreaModel>> getParkingAreas(double latitude, double longitude, String vecType) async {
     // mock data for now
-    areas = await parkingAreas();
+    areas = await parkingAreas(latitude, longitude, vecType);
     return areas;
   }
 

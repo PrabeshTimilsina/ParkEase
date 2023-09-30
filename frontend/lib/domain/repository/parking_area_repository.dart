@@ -6,7 +6,7 @@ abstract class ParkingAreaRepository {
   ///
   /// Return the parking areas
   ///
-  Future<List<ParkingAreaEntity>> getParkingAreas(double latitude, double longitude);
+  Future<List<ParkingAreaEntity>> getParkingAreas(double latitude, double longitude, String vecType);
 
   ///
   /// Return the parking area corresponding to the given latitude and longitude.
