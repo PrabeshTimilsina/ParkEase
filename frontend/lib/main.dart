@@ -3,6 +3,7 @@ import 'package:park_ease/providers/current_address_model.dart';
 import 'package:park_ease/providers/current_location_model.dart';
 import 'package:park_ease/presentation/pages/home.dart';
 import 'package:park_ease/presentation/pages/login.dart';
+import 'package:park_ease/providers/vehicle_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -15,6 +16,9 @@ void main() {
     ChangeNotifierProvider(
       create: (context) => CurrentAddressModel(),
     ),
+    ChangeNotifierProvider(
+      create: (context) => VehicleModel(),
+    )
   ], child: const MyApp()));
 }
 
