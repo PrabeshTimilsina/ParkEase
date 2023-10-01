@@ -10,6 +10,20 @@ class parkingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future openDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Cannot book this parking spot'),
+              content: const Text(
+                  "There is a free parking sopt in this parking area but we don't Know for how long"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'))
+              ],
+            ));
     return Scaffold(
         drawer: const NavDrawer(),
         appBar: AppBar(
@@ -32,6 +46,7 @@ class parkingList extends StatelessWidget {
                   }
                   final parkingArea =
                       nearbyParkings!.nearbyParkingAreas![index];
+                  final parkingAreaType = parkingArea.parkingAreaType;
                   return Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 8),
@@ -51,7 +66,7 @@ class parkingList extends StatelessWidget {
                                   fontSize: 20.0, fontWeight: FontWeight.bold),
                             ),
                             const Spacer(),
-                            Text('${parkingArea.latitude} distance'),
+                            Text('${parkingArea.distance} m'),
                           ],
                         ),
                         const SizedBox(height: 8.0),
@@ -65,23 +80,32 @@ class parkingList extends StatelessWidget {
                         const SizedBox(
                           height: 5,
                         ),
-                        Text('Price: ${parkingArea.ratePerHour.toString()}/Hr',
-                            style: const TextStyle(fontSize: 16)),
+
                         Row(
                           children: [
-                            Text(' ${parkingArea.longitude} address',
+                            Text(
+                                'Price: ${parkingArea.ratePerHour.toString()}/Hr',
                                 style: const TextStyle(fontSize: 16)),
                             const Spacer(),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Booking(
-                                          name: parkingArea.name,
-                                          rating: parkingArea.ratings,
-                                          distance: parkingArea.latitude,
-                                          rate: parkingArea.ratePerHour)));
-                                },
-                                child: const Text('Book now'))
+                            parkingAreaType == "regulated"
+                                ? ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => Booking(
+                                                  name: parkingArea.name,
+                                                  rating: parkingArea.ratings,
+                                                  distance:
+                                                      parkingArea.distance,
+                                                  rate: parkingArea
+                                                      .ratePerHour)));
+                                    },
+                                    child: const Text('Book now'))
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      openDialog();
+                                    },
+                                    child: const Text('Unregulated'))
                           ],
                         ),
 
