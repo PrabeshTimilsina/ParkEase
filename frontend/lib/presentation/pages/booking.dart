@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/my_textfield.dart';
+import 'package:park_ease/presentation/components/nav_drawer.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
 
 class Booking extends StatefulWidget {
@@ -34,6 +35,8 @@ class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Book Now")),
+      drawer: const NavDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

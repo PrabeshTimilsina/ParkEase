@@ -28,7 +28,7 @@ class _AdminState extends State<Admin> {
   final nameController = TextEditingController();
   final carCapacityController = TextEditingController();
   final motorCycleCapacityController = TextEditingController();
-  double rating = Random().nextDouble();
+  double rating = Random().nextDouble()*4 + 1;
 
   void registerPark(double latitude, double longitude) async {
     if (nameController.text.isNotEmpty &&

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:park_ease/classes/nearby_parkings.dart';
 import 'package:park_ease/presentation/components/nav_drawer.dart';
 import 'package:park_ease/presentation/pages/booking.dart';
+import 'dart:developer' as developer;
 
 class parkingList extends StatelessWidget {
   parkingList({super.key, required this.nearbyParkings});
@@ -10,12 +11,12 @@ class parkingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future openDialog() => showDialog(
+    Future openDialog(int availableSpaces) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: const Text('Cannot book this parking spot'),
-              content: const Text(
-                  "There is a free parking sopt in this parking area but we don't Know for how long"),
+              content: Text(
+                  "There are $availableSpaces free parking spots in this parking area. However, we can't ensure allocation of the spot."),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -47,6 +48,7 @@ class parkingList extends StatelessWidget {
                   final parkingArea =
                       nearbyParkings!.nearbyParkingAreas![index];
                   final parkingAreaType = parkingArea.parkingAreaType;
+                  developer.log(parkingArea.parkingAreaType.toString());
                   return Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 8),
@@ -72,7 +74,7 @@ class parkingList extends StatelessWidget {
                         const SizedBox(height: 8.0),
                         Row(
                           children: [
-                            Text('Rating: ${parkingArea.ratings.toString()}/5 ',
+                            Text('Rating: ${parkingArea.ratings.toString().substring(0, 3)}/5 ',
                                 style: const TextStyle(fontSize: 16)),
                             const Icon(Icons.star),
                           ],
@@ -103,7 +105,7 @@ class parkingList extends StatelessWidget {
                                     child: const Text('Book now'))
                                 : ElevatedButton(
                                     onPressed: () {
-                                      openDialog();
+                                      openDialog(parkingArea.availableSpaces);
                                     },
                                     child: const Text('Unregulated'))
                           ],

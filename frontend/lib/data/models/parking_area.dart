@@ -17,7 +17,7 @@ class ParkingAreaModel extends ParkingAreaEntity {
   });
 
   factory ParkingAreaModel.fromJSON(Map<String, dynamic> map) {
-    String? parkingAreaType = map["parkingAreaType"];
+    String? parkingAreaType = map["parkingType"];
     // defaulting to public if nothing is given
     parkingAreaType ??= "unregulated";
 
@@ -27,10 +27,10 @@ class ParkingAreaModel extends ParkingAreaEntity {
         latitude: map["latitude"],
         longitude: map["longitude"],
         availableSpaces: map["availableSpaces"],
-        ratings: Random().nextDouble(),
+        ratings: Random().nextDouble() * 4 + 1,
         ratePerHour: map["hourlyRate"],
         distance: map["distance"].toDouble(),
-        duration: map["duration"],
+        duration: map["duration"].toDouble(),
         parkingAreaType: parkingAreaType);
   }
 }
