@@ -22,6 +22,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  NearbyParkings? nearbyParkings;
+
   static const double fabHeightClosed = 116.0;
   double fabHeight = fabHeightClosed;
 
@@ -75,26 +77,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       bottom: fabHeight,
                       child: InkWell(
                         onTap: () async {
-                          NearbyParkings nearbyParkings = NearbyParkings(
+                          
+                          setState(() {
+                             nearbyParkings ??= NearbyParkings(
                               currentLocation:
                                   currentLocationModel.currentLocation);
-                          await nearbyParkings.setParkingAreas(
-                              location: currentLocationModel.currentLocation);
+                          });
 
-                          // removing previously set parking markers
-                          if (nearbyParkings.nearbyParkingAreas != null) {
-                             removeParkingMarkers(
-                                nearbyParkings.nearbyParkingAreas);
+                          if (nearbyParkings!.nearbyParkingAreas != null) {
+                            removeParkingMarkers(nearbyParkings!.nearbyParkingAreas);
                           }
 
+                          await nearbyParkings!.setParkingAreas(
+                              location: currentLocationModel.currentLocation);
+
                           // initialize parking area based on given location
-                          await nearbyParkings.setParkingAreas(
+                          await nearbyParkings!.setParkingAreas(
                               location: currentLocationModel.currentLocation, vecType: vehicleModel.currentVehicle);
 
                           // initialize parking markers only after parking areas have been initialized
-                          if (nearbyParkings.nearbyParkingAreas != null) {
+                          if (nearbyParkings!.nearbyParkingAreas != null) {
                             setParkingMarkers(
-                                nearbyParkings.nearbyParkingAreas);
+                                nearbyParkings!.nearbyParkingAreas);
                           }
                         },
                         child: Container(
