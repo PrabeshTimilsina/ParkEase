@@ -11,7 +11,7 @@ const {
   deleteReview,
 } = require("../controllers/parkingController");
 const { isUserAuthenticated } = require("../middleware/auth");
-router.route("/bookparking").post(confirmparking);
+router.route("/bookparking").post(isUserAuthenticated,confirmparking);
 router.route("/registerlocation").post(registerLocation);
 router.route("/availableparkings").get(getAvailableParkingSpaces);
 router.route("/mybookingdetails").get(mybookingDetails);

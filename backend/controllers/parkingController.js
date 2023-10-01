@@ -17,12 +17,12 @@ exports.registerLocation = tryCatchAsync(async (req, res, next) => {
 
   // Save the new location to the database
   await newLocation.save();
-  res.json({ message: "Location saved successfully" });
+  return res.status(200).json({ message: "Booking successful." });
 });
 
 exports.confirmparking = tryCatchAsync(async (req, res, next) => {
   const {
-    userId,
+    
     latitude,
     longitude,
     vehicleType,
@@ -70,7 +70,7 @@ exports.confirmparking = tryCatchAsync(async (req, res, next) => {
     //parkingSpace.isOccupied = true;
     parkingSpace.capacity = parkingSpace.capacity - 1;
     await parkingLocation.save();
-
+    userId= req.user.id
     // Create a new UserReservation document
     const reservation = new UserReservation({
       userId,
@@ -89,12 +89,15 @@ exports.confirmparking = tryCatchAsync(async (req, res, next) => {
 });
 
 exports.getAvailableParkingSpaces = tryCatchAsync(async (req, res, next) => {
-  const { latitude, longitude, vehicleType } = req.body;
+  const latitude  = req.query.latitude;
+   const  longitude = req.query.longitude;
+   const  vehicleType  = req.query.vehicleType;
   console.log(latitude, longitude, vehicleType);
   // Call the function to start the distance calculations
   const distanceInfo = await calculateDistances(
-    latitude,
-    longitude,
+
+  parseFloat(latitude),
+  parseFloat(longitude),
     vehicleType
   );
   console.log(distanceInfo.length);

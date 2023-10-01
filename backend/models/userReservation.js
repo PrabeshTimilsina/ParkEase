@@ -30,16 +30,16 @@ const userReservationSchema = new mongoose.Schema({
   //   required: true,
   // },
 
-  payment: {
-    transatctionId: {
-      type: String,
-      required: true,
-    },
-    gateway: {
-      type: String,
-      required: true,
-    },
-  },
+  // payment: {
+  //   transatctionId: {
+  //     type: String,
+  //     required: true,
+  //   },
+  //   gateway: {
+  //     type: String,
+  //     required: true,
+  //   },
+  // },
 });
 
 // Model for User's Parking Reservation

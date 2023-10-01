@@ -61,14 +61,17 @@ const options = "?steps=true";
 async function calculateDistances(latitude, longitude, vehicleType) {
   try {
     // Calculate latitude bounds for filtering parking locations
-    const latitudeDifferenceThreshold = 0.3; // Approximately 50 kilometers in latitude degrees
+    const latitudeDifferenceThreshold = 0.1; // Approximately 50 kilometers in latitude degrees
     const minLatitude = latitude - latitudeDifferenceThreshold;
     const maxLatitude = latitude + latitudeDifferenceThreshold;
+    const maxLongitude=longitude+latitudeDifferenceThreshold;
+    const minLongitude=longitude-latitudeDifferenceThreshold;
     console.log(minLatitude, maxLatitude);
     //console.log("hey we are in the distance calculation");
     // Fetch parking locations from the database within the latitude bounds
     const parkingLocations = await ParkingLocation.find({
       "location.latitude": { $gte: minLatitude, $lte: maxLatitude },
+      "location.longitude": {$gte:minLongitude,$lte:maxLongitude},
     });
     //console.log(parkingLocations)
     const destinationsInfo = [];
@@ -90,6 +93,9 @@ async function calculateDistances(latitude, longitude, vehicleType) {
           desiredLocation.location.latitude,
           desiredLocation.location.longitude
         );
+        const myhourlyrate = desiredLocation.categories.filter(
+          (space) => space.vehicleType === vehicleType
+        );
         const destination = `${desiredLocation.location.longitude},${desiredLocation.location.latitude}`;
         const osrmURL = `${osrmBaseURL}${longitude},${latitude};${destination}${options}`;
 
@@ -98,21 +104,25 @@ async function calculateDistances(latitude, longitude, vehicleType) {
           const response = await axios.get(osrmURL);
           //console.log(response.data)
           const route = response.data.routes[0];
-          const distance = route.distance; // Extract distance from the response
+          const distance = route.distance /1.0; // Extract distance from the response
           const duration = route.duration;
-
+        
           // Store destination information in the destinationsInfo array
+          
           destinationsInfo.push({
             _id: desiredLocation._id,
             name: desiredLocation.name,
             latitude: desiredLocation.location.latitude,
             longitude: desiredLocation.location.longitude,
-            distance: distance,
+            distance:distance ,
+            hourlyRate:myhourlyrate[0].rate,
             duration: duration,
             hourlyRate: myhourlyRate[0].rate,
             availableSpaces: availableSpaces,
+            parkingType:desiredLocation.parkingType
           });
-
+         
+console.log(destinationsInfo)
           console.log(
             `Distance from user location to ${desiredLocation.location.address}: ${distance} meters`
           );
@@ -151,49 +161,46 @@ async function hasAvailableSpaces(parkingLocation, vehicleType) {
     }
   } else {
     // console.log("Entered UnRegulated")
+   
+      const redis = new Redis({
+        host: "localhost", // Replace with your Redis server hostname or IP
+        port: 6379, // Replace with your Redis server port
+        db: 0, // Replace with the Redis database number you want to use
+      });
+      try {
+        const rawData = await redis.get(parkingLocation._id);
+        const availableSpaces = await parkingLocation.categories.filter(
+          (space) => space.vehicleType === vehicleType
+        );
+        if (rawData) {
+            const data = JSON.parse(rawData);
+             const { bikeCapacity, carCapaity } = data;
+             console.log({bikeCapacity,carCapaity})
 
-    const redis = new Redis({
-      host: "localhost", // Replace with your Redis server hostname or IP
-      port: 6379, // Replace with your Redis server port
-      db: 0, // Replace with the Redis database number you want to use
-    });
-    try {
-      const rawData = await redis.get(parkingLocation._id);
-      const availableSpaces = await parkingLocation.categories.filter(
-        (space) => space.vehicleType === vehicleType
-      );
-      if (rawData) {
-        const data = JSON.parse(rawData);
-        const { bikeCapacity, carCapaity } = data;
-        console.log({ bikeCapacity, carCapaity });
-
+           
         if (vehicleType == "Car") {
-          //console.log("Entered Car")
-          // console.log(availableSpaces[0].capacity)
-          if (availableSpaces[0].capacity - carCapaity > 0) {
-            // console.log(availableSpaces[0].capacity-carCapaity)
-            return availableSpaces[0].capacity - carCapaity;
-          } else {
-            return availableSpaces[0].capacity;
-          }
-        } else {
-          // console.log(availableSpaces[0].capacity)
-          console.log(bikeCapacity);
-          if (availableSpaces[0].capacity - bikeCapacity > 0) {
-            //console.log(availableSpaces[0].capacity-bikeCapacity)
-            return availableSpaces[0].capacity - bikeCapacity;
-          } else {
-            return availableSpaces[0].capacity;
-          }
-        }
-      } else {
-        console.log("Returning max");
+      //console.log("Entered Car")
+      // console.log(availableSpaces[0].capacity)
+            if (availableSpaces[0].capacity - carCapaity > 0 && carCapaity!==undefined ) {
+        // console.log(availableSpaces[0].capacity-carCapaity)
+        return availableSpaces[0].capacity - carCapaity;
+      } 
+           else{
         return availableSpaces[0].capacity;
       }
-    } catch (error) {
-      console.error("Error while retrieving data from Redis:", error);
-    } finally {
-      redis.quit(); // Close the Redis connection when done
+     
+    } else {
+      // console.log(availableSpaces[0].capacity)
+      console.log(bikeCapacity)
+      if(bikeCapacity === undefined){
+        return availableSpaces[0].capacity;
+      }
+      else if ( availableSpaces[0].capacity - bikeCapacity > 0 ) {
+        //console.log(availableSpaces[0].capacity-bikeCapacity)
+        return availableSpaces[0].capacity - bikeCapacity;
+        
+      } 
+      
     }
   }
   //   if(rawData !== NULL){

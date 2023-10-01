@@ -1,7 +1,9 @@
 const { connect } = require("mongoose");
 const app = require("./app");
 const dotenv = require("dotenv");
+const cron = require('node-cron');
 const connectDatabase = require("./config/database");
+const updateExpiredReservations=require("./controllers/updateReservation")
 
 //handling uncaught exception
 process.on("uncaughtException", (err) => {
@@ -26,4 +28,9 @@ process.on("unhandledRejection", (err) => {
   server.close(() => {
     process.exit(1);
   });
+});
+
+cron.schedule('* * * * *', () => {
+  console.log('Cron job is running...');
+  updateExpiredReservations();
 });
