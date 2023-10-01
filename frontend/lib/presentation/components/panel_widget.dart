@@ -31,7 +31,7 @@ class PanelWidget extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  Vehicle = 'Bike';
+                  Vehicle = 'Motorcycle';
                 },
                 child:
                     const SquareTile(imageLocation: 'assets/images/bike.jpg'),
