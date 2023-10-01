@@ -4,6 +4,7 @@ import 'package:park_ease/classes/nearby_parkings.dart';
 import 'package:park_ease/data/models/parking_area.dart';
 import 'package:park_ease/providers/current_location_model.dart';
 import 'package:park_ease/presentation/components/panel_widget.dart';
+import 'package:park_ease/providers/vehicle_model.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -21,6 +22,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  NearbyParkings? nearbyParkings;
+
   static const double fabHeightClosed = 116.0;
   double fabHeight = fabHeightClosed;
 
@@ -67,33 +70,35 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Consumer<CurrentLocationModel>(
-                builder: (context, currentLocationModel, child) {
+              Consumer2<CurrentLocationModel, VehicleModel>(
+                builder: (context, currentLocationModel, vehicleModel, child) {
                   return Positioned(
                       right: 20,
                       bottom: fabHeight,
                       child: InkWell(
                         onTap: () async {
-                          NearbyParkings nearbyParkings = NearbyParkings(
+                          
+                          setState(() {
+                             nearbyParkings ??= NearbyParkings(
                               currentLocation:
                                   currentLocationModel.currentLocation);
-                          await nearbyParkings.setParkingAreas(
-                              location: currentLocationModel.currentLocation);
+                          });
 
-                          // removing previously set parking markers
-                          if (nearbyParkings.nearbyParkingAreas != null) {
-                            removeParkingMarkers(
-                                nearbyParkings.nearbyParkingAreas);
+                          if (nearbyParkings!.nearbyParkingAreas != null) {
+                            removeParkingMarkers(nearbyParkings!.nearbyParkingAreas);
                           }
 
-                          // initialize parking area based on given location
-                          await nearbyParkings.setParkingAreas(
+                          await nearbyParkings!.setParkingAreas(
                               location: currentLocationModel.currentLocation);
 
+                          // initialize parking area based on given location
+                          await nearbyParkings!.setParkingAreas(
+                              location: currentLocationModel.currentLocation, vecType: vehicleModel.currentVehicle);
+
                           // initialize parking markers only after parking areas have been initialized
-                          if (nearbyParkings.nearbyParkingAreas != null) {
+                          if (nearbyParkings!.nearbyParkingAreas != null) {
                             setParkingMarkers(
-                                nearbyParkings.nearbyParkingAreas);
+                                nearbyParkings!.nearbyParkingAreas);
                           }
                         },
                         child: Container(

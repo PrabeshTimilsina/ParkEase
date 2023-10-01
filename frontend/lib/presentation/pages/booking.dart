@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/my_textfield.dart';
+import 'package:park_ease/presentation/components/nav_drawer.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
 
 class Booking extends StatefulWidget {
@@ -14,7 +16,7 @@ class Booking extends StatefulWidget {
   final String name;
   final double rating;
   final double distance;
-  final double rate;
+  final int rate;
 
   @override
   _BookingState createState() => _BookingState();
@@ -33,17 +35,20 @@ class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Book Now")),
+      drawer: const NavDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                width: 250,
+                width: MediaQuery.of(context).size.width * 0.80,
+                height: MediaQuery.of(context).size.height * 0.33,
                 margin: const EdgeInsets.all(20),
                 padding: const EdgeInsets.all(25.0),
                 decoration: BoxDecoration(
-                  color: Colors.blue[900],
-                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color.fromARGB(255, 11, 19, 30),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -54,6 +59,9 @@ class _BookingState extends State<Booking> {
                         color: Colors.white,
                         fontSize: 18.0,
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -74,6 +82,9 @@ class _BookingState extends State<Booking> {
                         )
                       ],
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       '${widget.distance.toString()} m',
                       style: const TextStyle(
@@ -81,14 +92,21 @@ class _BookingState extends State<Booking> {
                         fontSize: 18.0,
                       ),
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SquareTile(imageLocation: 'assets/images/car.jpg'),
+                        SquareTile(
+                            isselected: false,
+                            imageLocation: 'assets/images/car.jpg'),
                         SizedBox(
                           width: 50,
                         ),
-                        SquareTile(imageLocation: 'assets/images/bike.jpg'),
+                        SquareTile(
+                            isselected: false,
+                            imageLocation: 'assets/images/bike.jpg'),
                       ],
                     )
                   ],
@@ -98,8 +116,8 @@ class _BookingState extends State<Booking> {
                 width: 130,
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color.fromARGB(255, 11, 19, 30),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(
                   'Rate: ${widget.rate}/hrs',
@@ -123,8 +141,8 @@ class _BookingState extends State<Booking> {
                   width: 130,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color.fromARGB(255, 11, 19, 30),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
                     'Total: $total', // Display the total value
@@ -136,23 +154,24 @@ class _BookingState extends State<Booking> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  final double rate = widget.rate;
+              MyButton(
+                onTap: () {
+                  final int rate = widget.rate;
+
                   final double hours =
                       double.tryParse(hourController.text) ?? 0.0;
                   setState(() {
                     total = rate * hours;
                   });
                 },
-                child: const Text('Book'),
+                buttonName: "Book",
               ),
               const SizedBox(height: 10),
-              ElevatedButton(
-                  onPressed: () {
+              MyButton(
+                  onTap: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('Cancel')),
+                  buttonName: 'Cancel'),
             ],
           ),
         ),

@@ -1,14 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:park_ease/data/constants.dart';
 import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/components/my_textfield.dart';
 import 'package:park_ease/presentation/components/square_tile.dart';
+import 'package:park_ease/presentation/pages/home.dart';
 import 'package:park_ease/presentation/pages/register.dart';
+import 'package:http/http.dart' as http;
 
-class Login extends StatelessWidget {
+import 'dart:developer' as developer;
+
+class Login extends StatefulWidget {
   Login({super.key});
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
+  void loginUser() async {
+    var regBody = {
+      "email": emailController.text,
+      "password": passwordController.text
+    };
+    var response = await http.post(Uri.parse(login),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(regBody));
+    var jsonResponse = jsonDecode(response.body);
+    developer.log(jsonResponse.toString());
+    developer.log(jsonResponse['success'].toString());
+    if (jsonResponse['success']) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const MyHomePage(title: "Home")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaquery = MediaQuery.of(context).size;
@@ -50,8 +83,9 @@ class Login extends StatelessWidget {
                 SizedBox(
                   height: mediaquery.height * 0.025,
                 ),
-                const MyButton(
+                MyButton(
                   buttonName: 'Login',
+                  onTap: loginUser,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 const Padding(
@@ -83,11 +117,15 @@ class Login extends StatelessWidget {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareTile(imageLocation: 'assets/images/google.png'),
+                    SquareTile(
+                        isselected: false,
+                        imageLocation: 'assets/images/google.png'),
                     SizedBox(
                       width: 100,
                     ),
-                    SquareTile(imageLocation: 'assets/images/apple.png')
+                    SquareTile(
+                        isselected: false,
+                        imageLocation: 'assets/images/apple.png')
                   ],
                 ),
                 SizedBox(height: mediaquery.height * 0.05),

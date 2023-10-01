@@ -6,6 +6,7 @@ import 'package:park_ease/presentation/components/my_button.dart';
 import 'package:park_ease/presentation/pages/home.dart';
 import 'package:http/http.dart' as http;
 import '../components/my_textfield.dart';
+import 'dart:developer' as developer;
 
 class Register extends StatefulWidget {
   Register({super.key});
@@ -28,24 +29,25 @@ class _RegisterState extends State<Register> {
   void registerUser() async {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       var regBody = {
-        "name": nameController,
-        "email": emailController,
-        "password": passwordController,
-        "confirmPassword": confirmPasswordController
+        "name": nameController.text,
+        "email": emailController.text,
+        "password": passwordController.text,
+        "confirmPassword": confirmPasswordController.text
       };
+      developer.log(regBody.toString());
       var response = await http.post(Uri.parse(registration),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(regBody));
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse['status']);
-      if (jsonResponse['status']) {
+      developer.log(jsonResponse['success']);
+      if (jsonResponse['success']) {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => const MyHomePage(title: "Home")));
       }
     } else {
-      print("Error while sending Registration information");
+      developer.log("Error while sending Registration information");
     }
   }
 
@@ -95,13 +97,20 @@ class _RegisterState extends State<Register> {
                   obscureText: true,
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
-                const MyButton(
+                MyButton(
                   buttonName: 'Sign up',
+                  onTap: () {
+                    registerUser();
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             const MyHomePage(title: "Home")));
+                  },
                 ),
                 SizedBox(height: mediaquery.height * 0.025),
                 GestureDetector(
                   onTap: () {
-                    registerUser();
                     Navigator.push(
                         context,
                         MaterialPageRoute(

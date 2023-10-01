@@ -14,7 +14,7 @@ class NearbyParkings {
       ParkingAreaRepositoryImpl();
 
   // initializing all for now
-  Future<bool> setParkingAreas({GeoPoint? location}) async {
+  Future<bool> setParkingAreas({GeoPoint? location, String? vecType}) async {
     location ??= currentLocation;
 
     final stopwatch = Stopwatch()..start();
@@ -22,15 +22,17 @@ class NearbyParkings {
 
     developer.log("The set location is $location");
 
-    if (location == null)  return false;
-
+    if (location == null || vecType == null)  return false;
+    
     List<ParkingAreaModel> pA = await parkingAreaRepository.getParkingAreas(
-        location.latitude, location.longitude);
+        location.latitude, location.longitude, vecType);
     developer
         .log("Finished importing parking areas. Took ${stopwatch.elapsed}");
 
     nearbyParkingAreas = pA;
     
+    developer.log("Nearby parking areas: $nearbyParkingAreas");
+
     if (pA.isEmpty) return false;
 
     return true;

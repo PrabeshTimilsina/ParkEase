@@ -172,9 +172,10 @@ class _MapsState extends State<Maps> {
 }
 
 void addParkingMarker(GeoPoint parkingLocation) async {
+
   await mapController.addMarker(parkingLocation,
       markerIcon: const MarkerIcon(
-          icon: Icon(Icons.not_listed_location_sharp, color: Colors.black)),
+          icon: Icon(Icons.location_pin, color: Colors.blue, size: 50,)),
       iconAnchor: IconAnchor(
         anchor: Anchor.top,
       ));

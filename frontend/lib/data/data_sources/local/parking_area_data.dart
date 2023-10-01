@@ -2,12 +2,10 @@ import 'dart:isolate';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:park_ease/data/models/parking_area.dart';
-import 'package:park_ease/domain/entities/parking_area_entity.dart';
 
 const String parkingAreasFilename = 'assets/parking_areas/parking_areas.csv';
 
-Future<List<ParkingAreaModel>> parkingAreas() async {
-
+Future<List<ParkingAreaModel>> parkingAreas(double latitude, double longitude, String vecType) async {
   // separating into two different functions because
   // asset bundler didn't get initialized early on and caused plugin not initialized error
   // might be because of the use of isolates
@@ -52,57 +50,23 @@ Future<List<ParkingAreaModel>> parkingAreasFromCSVString(
     String name = props[1].toString();
     double latitude = double.parse(props[2]);
     double longitude = double.parse(props[3]);
-    int maxCapacity = int.parse(props[4]);
+    int availableSpaces = int.parse(props[4]);
     double ratings = double.parse(props[5]);
 
-    ParkingAreaType? parkingAreaType;
+    int ratePerHour = int.parse(props[6]);
+    double distance = double.parse(props[7]);
+    double duration = double.parse(props[8]);
 
-    if (props.length > 6) {
-      double ratePerHour = double.parse(props[6]);
-      switch (props[7].toString().toLowerCase()) {
-        case "private":
-          parkingAreaType = ParkingAreaType.private;
-          break;
-        case "public":
-          parkingAreaType = ParkingAreaType.public;
-          break;
-        default:
-          parkingAreaType = ParkingAreaType.public;
-      }
-      List<ParkableVehicles> allowedVehicles = [];
-      if (props[8].toLowerCase().contains('c')) {
-        // car
-        allowedVehicles.add(ParkableVehicles.car);
-      }
-      if (props[8].toLowerCase().contains('b')) {
-        // bike
-        allowedVehicles.add(ParkableVehicles.bike);
-      }
-
-      if (allowedVehicles.isEmpty) {
-        // if none are allowed (if there is none stored)
-        allowedVehicles.add(ParkableVehicles.none);
-      }
-
-      parkingAreas.add(ParkingAreaModel(
-          id: id,
-          name: name,
-          latitude: latitude,
-          longitude: longitude,
-          maxCapacity: maxCapacity,
-          ratings: ratings,
-          ratePerHour: ratePerHour,
-          parkingAreaType: parkingAreaType,
-          allowedVehicles: allowedVehicles));
-    } else {
-      parkingAreas.add(ParkingAreaModel(
-          id: id,
-          name: name,
-          latitude: latitude,
-          longitude: longitude,
-          maxCapacity: maxCapacity,
-          ratings: ratings));
-    }
+    parkingAreas.add(ParkingAreaModel(
+        id: id,
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        availableSpaces: availableSpaces,
+        ratings: ratings,
+        ratePerHour: ratePerHour,
+        distance: distance,
+        duration: duration));
   }
   sndPort.send(parkingAreas);
   return parkingAreas;
