@@ -8,7 +8,7 @@ const osrmBaseURL = "http://127.0.0.1:5000/route/v1/driving/";
 const options = "?steps=true";
 
 // Define the starting point (latitude and longitude)
-// Replace with your starting point coordinates
+ // Replace with your starting point coordinates
 
 // Array to store destination information (including latitude, longitude, and distance)
 //const destinationsInfo = [];
@@ -85,9 +85,6 @@ async function calculateDistances(latitude, longitude, vehicleType) {
       );
       //  console.log(availableSpaces)
       if (availableSpaces > 0) {
-        const myhourlyRate = parkingLocation.categories.filter(
-          (space) => space.vehicleType === vehicleType && space.capacity > 0
-        );
         //console.log("If available spaces")
         console.log(
           desiredLocation.location.latitude,
@@ -117,7 +114,6 @@ async function calculateDistances(latitude, longitude, vehicleType) {
             distance:distance ,
             hourlyRate:myhourlyrate[0].rate,
             duration: duration,
-            hourlyRate: myhourlyRate[0].rate,
             availableSpaces: availableSpaces,
             parkingType:desiredLocation.parkingType
           });
@@ -201,13 +197,25 @@ async function hasAvailableSpaces(parkingLocation, vehicleType) {
         
       } 
       
+      
     }
   }
+  else {
+          console.log("Returning max")
+          return availableSpaces[0].capacity;
+        }
+      } catch (error) {
+        console.error('Error while retrieving data from Redis:', error);
+      } finally {
+        redis.quit(); // Close the Redis connection when done
+      }
+    }
   //   if(rawData !== NULL){
   //   console.log(rawData);
   //   const data = JSON.parse(rawData);
   //   console.log(data)
   //   const { bikeCapacity, carCapaity } = data;
+    
 
   //   const availableSpaces = await parkingLocation.categories.filter(
   //     (space) => space.vehicleType === vehicleType
@@ -218,18 +226,18 @@ async function hasAvailableSpaces(parkingLocation, vehicleType) {
   //     if (availableSpaces[0].capacity - carCapaity > 0) {
   //       // console.log(availableSpaces[0].capacity-carCapaity)
   //       return availableSpaces[0].capacity - carCapaity;
-  //     }
+  //     } 
   //   } else {
   //     // console.log(availableSpaces[0].capacity)
   //     if (availableSpaces[0].capacity - bikeCapacity > 0) {
   //       //console.log(availableSpaces[0].capacity-bikeCapacity)
   //       return availableSpaces[0].capacity - bikeCapacity;
-  //     }
+  //     } 
   //   }
   // }
   // else {
   //   return 0;
   // }
-}
+  }
 
 module.exports = calculateDistances;
