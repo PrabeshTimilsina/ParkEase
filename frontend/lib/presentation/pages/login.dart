@@ -32,8 +32,8 @@ class _LoginState extends State<Login> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(regBody));
     var jsonResponse = jsonDecode(response.body);
-    developer.log(jsonResponse);
-    developer.log(jsonResponse['success']);
+    developer.log(jsonResponse.toString());
+    developer.log(jsonResponse['success'].toString());
     if (jsonResponse['success']) {
       Navigator.push(
           context,

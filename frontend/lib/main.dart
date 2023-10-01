@@ -43,7 +43,6 @@ class MyApp extends StatelessWidget {
           '/logout': (BuildContext context) => const Placeholder(),
           '/quit': (BuildContext context) => const Placeholder(),
           '/settings': (BuildContext context) => const Placeholder(),
-          '/core_functionality': (BuildContext context) => const Placeholder(),
           '/location_selection': (BuildContext context) => const Placeholder(),
         });
   }
